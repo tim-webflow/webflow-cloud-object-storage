@@ -644,6 +644,9 @@ export default function FileUploader() {
           <li>
             BASE_URL: {import.meta.env.BASE_URL}
           </li>
+          <li>
+            assetsPrefix: {assetsPrefix}
+          </li>
         </ul>
       </div>
 
