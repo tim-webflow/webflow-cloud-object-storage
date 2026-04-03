@@ -70,7 +70,10 @@ export default function FileUploader() {
   const loadFiles = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${import.meta.env.BASE_URL}/api/list-assets`);
+      const response = await fetch(`${import.meta.env.BASE_URL}/api/list-assets`)
+      .catch((err) => {
+        console.error(err);
+      });
 
       if (!response.ok) {
         throw new Error("Failed to load files");
@@ -257,7 +260,7 @@ export default function FileUploader() {
           color: "#333",
         }}
       >
-        File Upload Demo 8:24
+        File Upload Demo 8:49
       </h2>
 
       {/* Upload Mode Toggle */}
@@ -636,7 +639,14 @@ export default function FileUploader() {
           </div>
         )}
       </div>
-      <div>{import.meta.env.BASE_URL}</div>
+      <div>
+        Environment variables:
+        <ul>
+          <li>
+            BASE_URL: {import.meta.env.BASE_URL}
+          </li>
+        </ul>
+      </div>
 
       <style
         dangerouslySetInnerHTML={{
