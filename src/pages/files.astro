@@ -1,8 +1,5 @@
 ---
 import Layout from '../layouts/Layout.astro';
-
-// Get the assets prefix from environment
-const assetsPrefix = Astro.locals.runtime?.env?.ASSETS_PREFIX || '';
 ---
 
 <Layout title="File Uploader">
@@ -76,7 +73,7 @@ const assetsPrefix = Astro.locals.runtime?.env?.ASSETS_PREFIX || '';
 </Layout>
 
 <script>
-	const assetsPrefix = '${assetsPrefix}';
+	const assetsPrefix = import.meta.env.BASE_URL.replace(/\/$/, '');
 
 	// DOM elements
 	const uploadForm = document.getElementById('uploadForm') as HTMLFormElement;
