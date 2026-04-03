@@ -1,8 +1,5 @@
 ---
 import Layout from '../layouts/Layout.astro';
-
-// Get the assets prefix from environment
-const assetsPrefix = Astro.locals.runtime?.env?.ASSETS_PREFIX || '/app';
 ---
 
 <Layout title="File Uploader">
@@ -76,7 +73,7 @@ const assetsPrefix = Astro.locals.runtime?.env?.ASSETS_PREFIX || '/app';
 </Layout>
 
 <script>
-	const assetsPrefix = '${assetsPrefix}';
+	const assetsPrefix = import.meta.env.BASE_URL;
 	
 	// DOM elements
 	const uploadForm = document.getElementById('uploadForm') as HTMLFormElement;
@@ -161,7 +158,7 @@ const assetsPrefix = Astro.locals.runtime?.env?.ASSETS_PREFIX || '/app';
 			loadingFiles.classList.remove('hidden');
 			filesList.innerHTML = '';
 			
-			const response = await fetch(`${assetsPrefix}/api/list-assets`);
+			const response = await fetch(`${assetsPrefix}api/list-assets`);
 			if (!response.ok) {
 				throw new Error('Failed to load files');
 			}
@@ -244,7 +241,7 @@ const assetsPrefix = Astro.locals.runtime?.env?.ASSETS_PREFIX || '/app';
 				progressBar.style.width = `${progress}%`;
 				progressText.textContent = `Uploading ${file.name}...`;
 				
-				const response = await fetch(`${assetsPrefix}/api/upload`, {
+				const response = await fetch(`${assetsPrefix}api/upload`, {
 					method: 'POST',
 					body: formData
 				});

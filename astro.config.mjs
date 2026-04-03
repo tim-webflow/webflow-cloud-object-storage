@@ -4,12 +4,11 @@ import cloudflare from "@astrojs/cloudflare";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@astrojs/react";
 
+const base = process.env.BASE_URL || "/";
+
 // https://astro.build/config
 export default defineConfig({
-  base: "/app",
-  build: {
-    assetsPrefix: "/app",
-  },
+  base,
   security: {
     checkOrigin: false,
   },
