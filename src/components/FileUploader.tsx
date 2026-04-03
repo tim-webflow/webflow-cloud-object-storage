@@ -257,7 +257,7 @@ export default function FileUploader() {
           color: "#333",
         }}
       >
-        File Upload Demo 4:53
+        File Upload Demo 8:11
       </h2>
 
       {/* Upload Mode Toggle */}
@@ -636,6 +636,7 @@ export default function FileUploader() {
           </div>
         )}
       </div>
+      <div>{import.meta.env.BASE_URL}</div>
 
       <style
         dangerouslySetInnerHTML={{
