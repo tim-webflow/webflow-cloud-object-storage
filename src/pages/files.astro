@@ -1,14 +1,11 @@
 ---
 import Layout from '../layouts/Layout.astro';
-
-// Get the assets prefix from environment
-const assetsPrefix = Astro.locals.runtime?.env?.ASSETS_PREFIX || '/app';
 ---
 
 <Layout title="File Uploader">
 	<div class="container mx-auto p-6 max-w-6xl">
 		<h1 class="text-4xl font-bold text-center mb-8">File Uploader</h1>
-		
+
 		<!-- Upload Section -->
 		<div class="card bg-base-100 shadow-xl mb-8">
 			<div class="card-body">
@@ -18,15 +15,15 @@ const assetsPrefix = Astro.locals.runtime?.env?.ASSETS_PREFIX || '/app';
 						<label class="label">
 							<span class="label-text">Select Files</span>
 						</label>
-						<input 
-							type="file" 
-							id="fileInput" 
-							multiple 
-							class="file-input file-input-bordered w-full" 
+						<input
+							type="file"
+							id="fileInput"
+							multiple
+							class="file-input file-input-bordered w-full"
 							accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.txt,.zip,.rar"
 						/>
 					</div>
-					
+
 					<div class="form-control">
 						<button type="submit" class="btn btn-primary" id="uploadBtn">
 							<span class="loading loading-spinner loading-sm hidden" id="uploadSpinner"></span>
@@ -34,7 +31,7 @@ const assetsPrefix = Astro.locals.runtime?.env?.ASSETS_PREFIX || '/app';
 						</button>
 					</div>
 				</form>
-				
+
 				<!-- Upload Progress -->
 				<div id="uploadProgress" class="hidden mt-4">
 					<div class="progress progress-primary w-full">
@@ -55,16 +52,16 @@ const assetsPrefix = Astro.locals.runtime?.env?.ASSETS_PREFIX || '/app';
 						Refresh
 					</button>
 				</div>
-				
+
 				<div id="filesList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
 					<!-- Files will be loaded here -->
 				</div>
-				
+
 				<div id="loadingFiles" class="text-center py-8">
 					<span class="loading loading-spinner loading-lg"></span>
 					<p class="mt-2">Loading files...</p>
 				</div>
-				
+
 				<div id="noFiles" class="text-center py-8 hidden">
 					<div class="text-6xl mb-4">📁</div>
 					<p class="text-lg">No files uploaded yet</p>
@@ -76,8 +73,9 @@ const assetsPrefix = Astro.locals.runtime?.env?.ASSETS_PREFIX || '/app';
 </Layout>
 
 <script>
-	const assetsPrefix = '${assetsPrefix}';
-	
+	const assetsPrefix = import.meta.env.BASE_URL.endsWith('/') ?
+    import.meta.env.BASE_URL : import.meta.env.BASE_URL + '/';
+
 	// DOM elements
 	const uploadForm = document.getElementById('uploadForm') as HTMLFormElement;
 	const fileInput = document.getElementById('fileInput') as HTMLInputElement;
@@ -111,7 +109,7 @@ const assetsPrefix = Astro.locals.runtime?.env?.ASSETS_PREFIX || '/app';
 		if (ext && fileIcons[ext]) {
 			return fileIcons[ext];
 		}
-		
+
 		// Check if it's a video or audio file
 		if (filename.match(/\.(mp4|avi|mov|wmv|flv|webm|mkv)$/i)) {
 			return fileIcons.video;
@@ -119,7 +117,7 @@ const assetsPrefix = Astro.locals.runtime?.env?.ASSETS_PREFIX || '/app';
 		if (filename.match(/\.(mp3|wav|flac|aac|ogg|wma)$/i)) {
 			return fileIcons.audio;
 		}
-		
+
 		return fileIcons.default;
 	}
 
@@ -160,32 +158,32 @@ const assetsPrefix = Astro.locals.runtime?.env?.ASSETS_PREFIX || '/app';
 		try {
 			loadingFiles.classList.remove('hidden');
 			filesList.innerHTML = '';
-			
-			const response = await fetch(`${assetsPrefix}/api/list-assets`);
+
+			const response = await fetch(`${assetsPrefix}api/list-assets`);
 			if (!response.ok) {
 				throw new Error('Failed to load files');
 			}
-			
+
 			const files = await response.json() as FileItem[];
-			
+
 			loadingFiles.classList.add('hidden');
-			
+
 			if (files.length === 0) {
 				noFiles.classList.remove('hidden');
 				return;
 			}
-			
+
 			noFiles.classList.add('hidden');
-			
+
 			files.forEach((file: FileItem) => {
 				const fileCard = document.createElement('div');
 				fileCard.className = 'card bg-base-200 shadow-sm hover:shadow-md transition-shadow';
-				
+
 				const isImageFile = isImage(file.name);
-				
+
 				fileCard.innerHTML = `
 					<figure class="px-4 pt-4">
-						${isImageFile 
+						${isImageFile
 							? `<img src="${file.link}" alt="${file.name}" class="rounded-xl h-32 w-full object-cover" />`
 							: `<div class="flex items-center justify-center h-32 w-full bg-base-300 rounded-xl">
 									<span class="text-4xl">${getFileIcon(file.name)}</span>
@@ -202,7 +200,7 @@ const assetsPrefix = Astro.locals.runtime?.env?.ASSETS_PREFIX || '/app';
 						</div>
 					</div>
 				`;
-				
+
 				filesList.appendChild(fileCard);
 			});
 		} catch (error) {
@@ -221,52 +219,52 @@ const assetsPrefix = Astro.locals.runtime?.env?.ASSETS_PREFIX || '/app';
 	// Handle file upload
 	async function handleUpload(event: Event) {
 		event.preventDefault();
-		
+
 		const files = fileInput.files;
 		if (!files || files.length === 0) {
 			alert('Please select files to upload');
 			return;
 		}
-		
+
 		// Show loading state
 		uploadBtn.disabled = true;
 		uploadSpinner.classList.remove('hidden');
 		uploadProgress.classList.remove('hidden');
-		
+
 		try {
 			for (let i = 0; i < files.length; i++) {
 				const file = files[i];
 				const formData = new FormData();
 				formData.append('file', file);
-				
+
 				// Update progress
 				const progress = ((i + 1) / files.length) * 100;
 				progressBar.style.width = `${progress}%`;
 				progressText.textContent = `Uploading ${file.name}...`;
-				
-				const response = await fetch(`${assetsPrefix}/api/upload`, {
+
+				const response = await fetch(`${assetsPrefix}api/upload`, {
 					method: 'POST',
 					body: formData
 				});
-				
+
 				if (!response.ok) {
 					throw new Error(`Failed to upload ${file.name}`);
 				}
 			}
-			
+
 			// Success
 			progressText.textContent = 'Upload completed!';
 			progressBar.style.width = '100%';
-			
+
 			// Reset form
 			fileInput.value = '';
-			
+
 			// Reload files list
 			setTimeout(() => {
 				loadFiles();
 				uploadProgress.classList.add('hidden');
 			}, 1000);
-			
+
 		} catch (error) {
 			console.error('Upload error:', error);
 			progressText.textContent = 'Upload failed!';
