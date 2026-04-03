@@ -638,6 +638,20 @@ export default function FileUploader() {
           </div>
         )}
       </div>
+      <div>
+        Environment variables:
+        <ul>
+          <li>
+            BASE_URL: {import.meta.env.BASE_URL}
+          </li>
+          <li>
+            SITE_URL: {import.meta.env.SITE_URL}
+          </li>
+          <li>
+            ORIGIN: {import.meta.env.ORIGIN}
+          </li>
+        </ul>
+      </div>
 
       <style
         dangerouslySetInnerHTML={{
