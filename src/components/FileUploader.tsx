@@ -257,7 +257,7 @@ export default function FileUploader() {
           color: "#333",
         }}
       >
-        File Upload Demo 8:11
+        File Upload Demo 8:24
       </h2>
 
       {/* Upload Mode Toggle */}
