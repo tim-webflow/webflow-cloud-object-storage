@@ -70,7 +70,7 @@ export default function FileUploader() {
   const loadFiles = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${import.meta.env.BASE_URL}/api/list-assets`);
+      const response = await fetch(`${import.meta.env.BASE_URL}api/list-assets`);
 
       if (!response.ok) {
         throw new Error("Failed to load files");
@@ -119,7 +119,7 @@ export default function FileUploader() {
       formData.append("file", file);
 
 
-      const response = await fetch(`${import.meta.env.BASE_URL}/api/upload`, {
+      const response = await fetch(`${import.meta.env.BASE_URL}api/upload`, {
         method: "POST",
         body: formData,
       });
@@ -154,8 +154,7 @@ export default function FileUploader() {
     setProgress(0);
 
     try {
-      const assetsPrefix = import.meta.env.ASSETS_PREFIX || "";
-      const BASE_CF_URL = `${assetsPrefix}/api/multipart-upload`;
+      const BASE_CF_URL = `${import.meta.env.BASE_URL}api/multipart-upload`;
       const key = file.name;
       const CHUNK_SIZE = 5 * 1024 * 1024; // 5MB
       const totalParts = Math.ceil(file.size / CHUNK_SIZE);
@@ -527,7 +526,7 @@ export default function FileUploader() {
               const fileLink =
                 file.link ||
                 (file.key
-                  ? `${import.meta.env.ASSETS_PREFIX}/api/asset?key=${file.key}`
+                  ? `${import.meta.env.BASE_URL}api/asset?key=${file.key}`
                   : "");
               const uploadDate =
                 file.dateUploaded || file.uploaded || new Date().toISOString();
