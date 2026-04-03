@@ -70,7 +70,7 @@ export default function FileUploader() {
   const loadFiles = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${import.meta.env.BASE_URL}/api/list-assets`)
+      const response = await fetch(`${import.meta.env.BASE_URL}api/list-assets`)
       .catch((err) => {
         console.error(err);
       });
@@ -122,7 +122,7 @@ export default function FileUploader() {
       formData.append("file", file);
 
 
-      const response = await fetch(`${import.meta.env.BASE_URL}/api/upload`, {
+      const response = await fetch(`${import.meta.env.BASE_URL}api/upload`, {
         method: "POST",
         body: formData,
       });
