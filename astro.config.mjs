@@ -4,12 +4,12 @@ import cloudflare from "@astrojs/cloudflare";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@astrojs/react";
 
-const BASE_URL = process.env.BASE_URL || "/";
-const base = BASE_URL.endsWith('/') ? BASE_URL : BASE_URL + '/';
+// const BASE_URL = process.env.BASE_URL || "/";
+// const base = BASE_URL.endsWith('/') ? BASE_URL : BASE_URL + '/';
 
 // https://astro.build/config
 export default defineConfig({
-  base,
+  base: '/a',
   security: {
     checkOrigin: false,
   },
