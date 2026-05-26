@@ -1,9 +1,12 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { getMountPath } from '../utils/mountPath';
+
+const mountPath = getMountPath(Astro.locals);
 ---
 
 <Layout title="File Uploader">
-	<div class="container mx-auto p-6 max-w-6xl">
+	<div class="container mx-auto p-6 max-w-6xl" data-mount-path={mountPath}>
 		<h1 class="text-4xl font-bold text-center mb-8">File Uploader</h1>
 
 		<!-- Upload Section -->
@@ -73,7 +76,9 @@ import Layout from '../layouts/Layout.astro';
 </Layout>
 
 <script>
-	const baseUrl = window.location.origin + import.meta.env.BASE_URL;
+	const mountPath =
+		document.querySelector<HTMLElement>('[data-mount-path]')?.dataset.mountPath || '/';
+	const baseUrl = window.location.origin + mountPath;
 
 	// DOM elements
 	const uploadForm = document.getElementById('uploadForm') as HTMLFormElement;

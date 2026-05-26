@@ -11,7 +11,13 @@ interface FileData {
   };
 }
 
-export default function FileUploader() {
+interface FileUploaderProps {
+  mountPath?: string;
+}
+
+export default function FileUploader({ mountPath = "/" }: FileUploaderProps) {
+  const apiBase =
+    typeof window !== "undefined" ? window.location.origin + mountPath : mountPath;
   const [isUploading, setIsUploading] = useState(false);
   const [progress, setProgress] = useState(0);
   const [files, setFiles] = useState<FileData[]>([]);
@@ -70,7 +76,7 @@ export default function FileUploader() {
   const loadFiles = async () => {
     try {
       setLoading(true);
-      const response = await fetch(new URL('api/list-assets', window.location.origin + import.meta.env.BASE_URL));
+      const response = await fetch(new URL('api/list-assets', apiBase));
 
       if (!response.ok) {
         throw new Error("Failed to load files");
@@ -119,7 +125,7 @@ export default function FileUploader() {
       formData.append("file", file);
 
 
-      const response = await fetch(new URL('api/upload', window.location.origin + import.meta.env.BASE_URL), {
+      const response = await fetch(new URL('api/upload', apiBase), {
         method: "POST",
         body: formData,
       });
@@ -154,7 +160,7 @@ export default function FileUploader() {
     setProgress(0);
 
     try {
-      const BASE_CF_URL = new URL('api/multipart-upload', window.location.origin + import.meta.env.BASE_URL);
+      const BASE_CF_URL = new URL('api/multipart-upload', apiBase);
       const key = file.name;
       const CHUNK_SIZE = 5 * 1024 * 1024; // 5MB
       const totalParts = Math.ceil(file.size / CHUNK_SIZE);
@@ -523,7 +529,7 @@ export default function FileUploader() {
             {files.map((file, index) => {
               const fileName = file.name || file.key || "Unknown file";
               const fileKey = file.key || file.name || `file-${index}`;
-              const assetUrl = new URL('api/asset', window.location.origin + import.meta.env.BASE_URL);
+              const assetUrl = new URL('api/asset', apiBase);
               if (file.key) assetUrl.searchParams.set('key', file.key);
               const fileLink = file.link || (file.key ? assetUrl.href : "");
               const uploadDate =
